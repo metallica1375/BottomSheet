@@ -39,7 +39,9 @@ public final class BottomSheetHostingController<Content>: UIHostingController<Co
         prefersGrabberVisible: Bool? = nil,
         cornerRadius: CGFloat? = nil,
         allowsInteractiveDismiss: Bool? = nil,
-        rootView: Content
+        rootView: Content,
+        backgroundColor: UIColor,
+        darkMode: Bool
     ) {
         super.init(rootView: rootView)
         modalPresentationStyle = .custom
@@ -55,6 +57,10 @@ public final class BottomSheetHostingController<Content>: UIHostingController<Co
         if let allowsInteractiveDismiss = allowsInteractiveDismiss {
             bottomSheetPresentationController?.allowsInteractiveDismiss = allowsInteractiveDismiss
         }
+        
+        bottomSheetPresentationController?.backgroundColor = backgroundColor
+        bottomSheetPresentationController?.darkMode = darkMode
+        
     }
 
     @MainActor required dynamic init?(coder aDecoder: NSCoder) { fatalError() }
@@ -64,7 +70,7 @@ public final class BottomSheetHostingController<Content>: UIHostingController<Co
         set {}
     }
     
-    public override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent }
+    public override var preferredStatusBarStyle: UIStatusBarStyle { .default }
     
     var bottomSheetPresentationController: BottomSheetPresentationController? {
         presentationController as? BottomSheetPresentationController

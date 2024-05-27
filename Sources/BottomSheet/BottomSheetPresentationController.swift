@@ -30,7 +30,7 @@ final class BottomSheetPresentationController: UIPresentationController {
     private lazy var dimmingView: UIView = {
         let v = UIView()
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.backgroundColor = UIColor.black.withAlphaComponent(0.24)
+        v.backgroundColor = UIColor.black.withAlphaComponent(0.3)
         v.alpha = 0
         return v
     }()
@@ -52,6 +52,10 @@ final class BottomSheetPresentationController: UIPresentationController {
             presentedView?.layer.cornerRadius = cornerRadius
         }
     }
+    
+    var backgroundColor: UIColor = .white
+    var darkMode: Bool = false
+    
 
     public var prefersGrabberVisible: Bool = false {
         didSet {
@@ -77,6 +81,8 @@ final class BottomSheetPresentationController: UIPresentationController {
     let dismissDragGestureRecognizer = UIPanGestureRecognizer()
 
 
+    
+    
     override func presentationTransitionWillBegin() {
         super.presentationTransitionWillBegin()
 
@@ -104,6 +110,7 @@ final class BottomSheetPresentationController: UIPresentationController {
             grabberView.widthAnchor.constraint(equalToConstant: grabberSize.width),
             grabberView.heightAnchor.constraint(equalToConstant: grabberSize.height),
         ])
+    
 
         dismissTapGestureRecognizer.addTarget(self, action: #selector(handleOverlayTap))
         dismissDragGestureRecognizer.addTarget(self, action: #selector(handlePan))
@@ -186,6 +193,15 @@ final class BottomSheetPresentationController: UIPresentationController {
             return .zero
         }
         
+        presentedView.backgroundColor = backgroundColor
+        
+        if (darkMode) {
+            presentedView.overrideUserInterfaceStyle = .dark
+        }
+        else {
+            presentedView.overrideUserInterfaceStyle = .light
+        }
+        
         let targetSize = CGSize(
             width: containerView.frame.width,
             height: containerView.frame.height
@@ -193,7 +209,7 @@ final class BottomSheetPresentationController: UIPresentationController {
 
         let sizeThatFits = presentedView.sizeThatFits(targetSize)
 
-        let height = min(sizeThatFits.height, containerView.frame.height * maximumHeightRatio)
+        var height = min(sizeThatFits.height, containerView.frame.height * maximumHeightRatio)
 
         return CGRect(
             x: 0,

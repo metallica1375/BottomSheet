@@ -40,6 +40,8 @@ public extension View {
         isPresented: Binding<Bool>,
         cornerRadius: CGFloat? = nil,
         prefersGrabberVisible: Bool? = nil,
+        backgroundColor: UIColor,
+        darkMode: Bool,
         @ViewBuilder content: @escaping () -> Content
     ) -> some View where Content: View {
         modifier(
@@ -47,6 +49,8 @@ public extension View {
                 isPresented: isPresented,
                 cornerRadius: cornerRadius,
                 prefersGrabberVisible: prefersGrabberVisible,
+                backgroundColor: backgroundColor,
+                darkMode: darkMode,
                 content: content
             )
         )
@@ -58,18 +62,24 @@ struct BottomSheetModifier<BottomSheet>: ViewModifier where BottomSheet: View {
         isPresented: Binding<Bool>,
         cornerRadius: CGFloat?,
         prefersGrabberVisible: Bool?,
+        backgroundColor: UIColor,
+        darkMode: Bool,
         content: () -> BottomSheet
     ) {
         _isPresented = isPresented
         self.cornerRadius = cornerRadius
         self.prefersGrabberVisible = prefersGrabberVisible
         self.content = content()
+        self.backgroundColor = backgroundColor
+        self.darkMode = darkMode
     }
     
     @Binding var isPresented: Bool
     let cornerRadius: CGFloat?
     let prefersGrabberVisible: Bool?
     let content: BottomSheet
+    let backgroundColor: UIColor
+    let darkMode: Bool
     
     @State private var transitioningDelegate = BottomSheetTransitioningDelegate()
     @State private var presentingViewController: UIViewController?
@@ -80,7 +90,9 @@ struct BottomSheetModifier<BottomSheet>: ViewModifier where BottomSheet: View {
                 BottomSheetHostingController(
                     prefersGrabberVisible: prefersGrabberVisible,
                     cornerRadius: cornerRadius,
-                    rootView: content
+                    rootView: content,
+                    backgroundColor: backgroundColor,
+                    darkMode: darkMode
                 )
             }
     }
